@@ -1,209 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Best Motivational Books</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Best motivational and self-help books for students and professionals">
+  <meta charset="UTF-8">
+  <title>Best Motivational Books for Students | Habit • Money • Mindset</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Top motivational, habit, money and mindset books recommended for students. Buy via Amazon with trusted picks.">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- SEO -->
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="motivational books, best books for students, habit books, money mindset books">
 
-    <style>
-        * { box-sizing: border-box; }
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: #f4f6f8;
-            color: #111;
-        }
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,sans-serif;background:#f4f6f8;color:#111;transition:.3s}
+    body.dark{background:#0f172a;color:#e5e7eb}
 
-        /* HEADER */
-        header {
-            background: #1f2937;
-            color: #fff;
-            padding: 22px 16px;
-            text-align: center;
-        }
+    header{background:#1f2937;color:#fff;padding:18px;text-align:center;position:sticky;top:0;z-index:10}
+    header h1{margin:0;font-size:22px}
+    header p{margin:6px 0 10px;font-size:14px;opacity:.9}
 
-        header h1 {
-            font-size: 22px;
-            margin: 0;
-            font-weight: 700;
-        }
+    .controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .controls button,.controls input{
+      padding:7px 12px;border-radius:20px;border:none;font-size:13px;cursor:pointer
+    }
+    .controls button{background:#ff9900;font-weight:600}
+    .controls button.active{background:#f59e0b}
+    .controls input{min-width:160px}
 
-        header p {
-            font-size: 14px;
-            margin-top: 6px;
-            opacity: 0.9;
-        }
+    .toggle{background:#111;color:#fff}
 
-        /* GRID */
-        .container {
-            max-width: 1100px;
-            margin: 20px auto 40px;
-            padding: 0 14px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 14px;
-        }
+    .container{max-width:1100px;margin:20px auto 80px;padding:0 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
 
-        /* CARD */
-        .book {
-            background: #fff;
-            border-radius: 10px;
-            padding: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    .book{background:#fff;border-radius:10px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);display:flex;flex-direction:column}
+    body.dark .book{background:#020617}
 
-        .book:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 22px rgba(0,0,0,0.15);
-        }
+    .badge{font-size:11px;background:#22c55e;color:#fff;padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:6px}
+    .top{background:#ef4444}
 
-        .book img {
-            width: 100%;
-            max-height: 220px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
+    .book img{width:100%;height:200px;object-fit:contain}
+    .book h3{font-size:14px;margin:6px 0}
+    .book p{font-size:12px;color:#555;flex-grow:1}
+    body.dark .book p{color:#9ca3af}
 
-        .book h3 {
-            font-size: 14px;
-            font-weight: 600;
-            margin: 4px 0 6px;
-            line-height: 1.3;
-        }
+    .stars{color:#f59e0b;font-size:13px;margin-bottom:6px}
 
-        .book p {
-            font-size: 12px;
-            color: #555;
-            margin: 0 0 10px;
-            line-height: 1.4;
-        }
+    .btn{background:#ff9900;color:#111;text-decoration:none;text-align:center;padding:8px;border-radius:6px;font-weight:700;font-size:13px}
 
-        .btn {
-            text-align: center;
-            background: #ff9900;
-            color: #111;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 8px 0;
-            border-radius: 6px;
-            transition: background 0.2s ease;
-        }
+    footer{background:#1f2937;color:#fff;text-align:center;padding:18px;font-size:13px}
 
-        .btn:hover {
-            background: #f59e0b;
-        }
+    /* Sticky buy button */
+    .sticky-buy{position:fixed;bottom:0;left:0;right:0;background:#ff9900;padding:12px;text-align:center;display:none;font-weight:700}
+    .sticky-buy a{text-decoration:none;color:#111}
 
-        /* FOOTER */
-        footer {
-            background: #1f2937;
-            color: #fff;
-            padding: 18px 14px;
-            text-align: center;
-            font-size: 13px;
-        }
-
-        footer a {
-            color: #ffb703;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        footer .yt {
-            display: inline-block;
-            margin-top: 10px;
-            background: #ff9900;
-            color: #111;
-            padding: 10px 18px;
-            border-radius: 20px;
-        }
-
-        footer .yt:hover {
-            background: #f59e0b;
-        }
-    </style>
+    @media(max-width:768px){.sticky-buy{display:block}}
+  </style>
 </head>
 <body>
 
 <header>
-    <h1>Best Motivational Books</h1>
-    <p>Small habits. Big success 📚</p>
+  <h1>Best Motivational Books</h1>
+  <p>Recommended for Students 📚</p>
+
+  <div class="controls">
+    <button class="active" onclick="filterBooks('all')">All</button>
+    <button onclick="filterBooks('habit')">Habit</button>
+    <button onclick="filterBooks('money')">Money</button>
+    <button onclick="filterBooks('mindset')">Mindset</button>
+    <input type="text" placeholder="Search books..." onkeyup="searchBooks(this.value)">
+    <button class="toggle" onclick="toggleMode()">🌙</button>
+  </div>
 </header>
 
 <div class="container">
 
-    <div class="book">
-        <img src="book1.jpg" alt="The Power of Your Subconscious Mind">
-        <h3>The Power of Your Subconscious Mind</h3>
-        <p>Unlock the hidden power of your thoughts.</p>
-        <a class="btn" href="https://amzn.to/44ujJ1U" target="_blank">Buy on Amazon</a>
-    </div>
+  <!-- BOOK 1 -->
+  <div class="book mindset recommended" data-name="power of subconscious mind">
+    <span class="badge top">Top Pick</span>
+    <img src="book1.jpg" alt="The Power of Your Subconscious Mind">
+    <h3>The Power of Your Subconscious Mind</h3>
+    <div class="stars">★★★★★</div>
+    <p>Unlock the hidden power of your thoughts.</p>
+    <a class="btn" href="https://amzn.to/44ujJ1U" target="_blank" onclick="trackClick('Subconscious Mind')">Buy on Amazon</a>
+  </div>
 
-    <div class="book">
-        <img src="book2.jpg" alt="Atomic Habits">
-        <h3>Atomic Habits</h3>
-        <p>Build good habits. Break bad ones.</p>
-        <a class="btn" href="https://amzn.to/3MCKZoV" target="_blank">Buy on Amazon</a>
-    </div>
+  <!-- BOOK 2 -->
+  <div class="book habit bestseller recommended" data-name="atomic habits">
+    <span class="badge best">Bestseller</span>
+    <img src="book2.jpg" alt="Atomic Habits">
+    <h3>Atomic Habits</h3>
+    <div class="stars">★★★★★</div>
+    <p>Build good habits. Break bad ones.</p>
+    <a class="btn" href="https://amzn.to/3MCKZoV" target="_blank" onclick="trackClick('Atomic Habits')">Buy on Amazon</a>
+  </div>
 
-    <div class="book">
-        <img src="book3.jpg" alt="The Psychology of Money">
-        <h3>The Psychology of Money</h3>
-        <p>Timeless lessons on wealth & behavior.</p>
-        <a class="btn" href="https://amzn.to/4pGqAxG" target="_blank">Buy on Amazon</a>
-    </div>
-   
-    <div class="book">
-        <img src="book4.jpg" alt="The Psychology of Money">
-        <h3>Don't Believe Everything You Think</h3>
-        <p>'Don't Believe Everything You Think' uncovers the core of psychological s</p>
-        <a class="btn" href="https://amzn.to/4j7jksk" target="_blank">Buy on Amazon</a>
-    </div>
+  <!-- BOOK 3 -->
+  <div class="book money" data-name="psychology of money">
+    <img src="book3.jpg" alt="The Psychology of Money">
+    <h3>The Psychology of Money</h3>
+    <div class="stars">★★★★☆</div>
+    <p>Timeless lessons on wealth & behavior.</p>
+    <a class="btn" href="https://amzn.to/4pGqAxG" target="_blank" onclick="trackClick('Psychology of Money')">Buy on Amazon</a>
+  </div>
 
-    <div class="book">
-        <img src="book5.jpg" alt="The Psychology of Money">
-        <h3>The Mountain Is You: Transforming Self-Sabotage Into Self-Mastery</h3>
-        <p>This is a book about self-sabotage.</p>
-        <a class="btn" href="https://amzn.to/495ZcCn" target="_blank">Buy on Amazon</a>
-    </div>
+  <!-- BOOK 4 -->
+  <div class="book mindset" data-name="dont believe everything you think">
+    <img src="book4.jpg" alt="Don't Believe Everything You Think">
+    <h3>Don't Believe Everything You Think</h3>
+    <div class="stars">★★★★☆</div>
+    <p>Uncovers the core of psychological suffering.</p>
+    <a class="btn" href="https://amzn.to/4j7jksk" target="_blank" onclick="trackClick('Dont Believe Everything')">Buy on Amazon</a>
+  </div>
 
-    <div class="book">
-        <img src="book6.jpg" alt="The Psychology of Money">
-        <h3>How to Win Friends and Influence People : Original Edition | Premium Paperback</h3>
-        <p>Timeless lessons on wealth & behavior.</p>
-        <a class="btn" href="https://amzn.to/4qAYS5R" target="_blank">Buy on Amazon</a>
-    
-    </div>
+  <!-- BOOK 5 -->
+  <div class="book mindset recommended" data-name="the mountain is you">
+    <img src="book5.jpg" alt="The Mountain Is You">
+    <h3>The Mountain Is You</h3>
+    <div class="stars">★★★★☆</div>
+    <p>Transforming self-sabotage into self-mastery.</p>
+    <a class="btn" href="https://amzn.to/495ZcCn" target="_blank" onclick="trackClick('The Mountain Is You')">Buy on Amazon</a>
+  </div>
 
-    <div class="book">
-        <img src="book7.jpg" alt="The Psychology of Money">
-        <h3>Think and Grow Rich: THE 21st CENTURY EDITION </h3>
-        <p>?Both poverty and riches are the offspring of thought.? </p>
-        <a class="btn" href="https://amzn.to/3KSLlHy" target="_blank">Buy on Amazon</a>
-    </div>
+  <!-- BOOK 6 -->
+  <div class="book habit" data-name="how to win friends">
+    <img src="book6.jpg" alt="How to Win Friends and Influence People">
+    <h3>How to Win Friends & Influence People</h3>
+    <div class="stars">★★★★★</div>
+    <p>Timeless lessons on communication & influence.</p>
+    <a class="btn" href="https://amzn.to/4qAYS5R" target="_blank" onclick="trackClick('How to Win Friends')">Buy on Amazon</a>
+  </div>
 
-    <div class="book">
-        <img src="book8.jpg" alt="The Psychology of Money">
-        <h3>The Richest Man in Babylon</h3>
-        <p>Discover the secrets to financial prosperity in The Richest Man In Babylon</p>
-        <a class="btn" href="https://amzn.to/4oZLWF2" target="_blank">Buy on Amazon</a>
-    </div>
+  <!-- BOOK 7 -->
+  <div class="book money" data-name="think and grow rich">
+    <img src="book7.jpg" alt="Think and Grow Rich">
+    <h3>Think and Grow Rich</h3>
+    <div class="stars">★★★★☆</div>
+    <p>Poverty and riches are offspring of thought.</p>
+    <a class="btn" href="https://amzn.to/3KSLlHy" target="_blank" onclick="trackClick('Think and Grow Rich')">Buy on Amazon</a>
+  </div>
 
+  <!-- BOOK 8 -->
+  <div class="book money recommended" data-name="richest man in babylon">
+    <img src="book8.jpg" alt="The Richest Man in Babylon">
+    <h3>The Richest Man in Babylon</h3>
+    <div class="stars">★★★★★</div>
+    <p>Classic guide to financial prosperity.</p>
+    <a class="btn" href="https://amzn.to/4oZLWF2" target="_blank" onclick="trackClick('Richest Man in Babylon')">Buy on Amazon</a>
+  </div>
 
 </div>
 
+<div class="sticky-buy">
+  <a href="https://amzn.to/3MCKZoV" target="_blank">🔥 Buy Top Pick – Atomic Habits</a>
+</div>
+
 <footer>
-    <p>As an Amazon Associate, I earn from qualifying purchases.</p>
-    <a class="yt" href="https://www.youtube.com/@spiritMotive-s63" target="_blank">🔔 Subscribe on YouTube</a>
+  <p>As an Amazon Associate, I earn from qualifying purchases.</p>
 </footer>
+
+<script>
+  function filterBooks(cat){
+    document.querySelectorAll('.controls button').forEach(b=>b.classList.remove('active'))
+    event.target.classList.add('active')
+    document.querySelectorAll('.book').forEach(b=>{
+      b.style.display=(cat==='all'||b.classList.contains(cat))?'flex':'none'
+    })
+  }
+
+  function searchBooks(q){
+    q=q.toLowerCase()
+    document.querySelectorAll('.book').forEach(b=>{
+      b.style.display=b.dataset.name.includes(q)?'flex':'none'
+    })
+  }
+
+  function toggleMode(){document.body.classList.toggle('dark')}
+
+  function track(){
+    localStorage.setItem('amazonClicks',(Number(localStorage.getItem('amazonClicks'))||0)+1)
+  }
+</script>
 
 </body>
 </html>
