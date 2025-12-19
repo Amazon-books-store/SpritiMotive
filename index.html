@@ -96,6 +96,8 @@ footer{background:#1f2937;color:#fff;text-align:center;padding:18px;font-size:13
 </header>
 
 <div class="container">
+<h2 class="section-title">📘 Exam Prep Books – Inter & EAMCET</h2>
+  
 
 <div class="book mindset recommended" data-name="power of subconscious mind">
 <span class="badge top">Top Pick</span>
@@ -172,6 +174,34 @@ footer{background:#1f2937;color:#fff;text-align:center;padding:18px;font-size:13
 <footer>
 <p>As an Amazon Associate, I earn from qualifying purchases.</p>
 </footer>
+
+ <script>
+const SHEET_ID="2PACX-1vTV468fBRy1rKM5fNewrGZIuGxUo1--lXkk4uu7_cGuEjwPdUDmKoQH_E0JpNgZyy9YTP7BpwRq0h2E";
+const URL=`https://opensheet.elk.sh/${SHEET_ID}/Sheet1`
+
+fetch(URL)
+.then(res=>res.json())
+.then(data=>{
+  const container=document.querySelector(".container")
+
+  data.forEach(p=>{
+    const div=document.createElement("div")
+    div.className=`book ${p.Category.toLowerCase()} ${p.Recommended==="Yes"?"recommended":""}`
+    div.dataset.rating=p.Rating
+
+    div.innerHTML=`
+      ${p.Badge?`<span class="badge">${p.Badge}</span>`:""}
+      <img src="${p.Image}">
+      <h3>${p.Title}</h3>
+      <div class="stars">${"★".repeat(Math.round(p.Rating))}</div>
+      <p>${p.Description}</p>
+      <a class="btn" href="${p.Link}" target="_blank">Buy on Amazon</a>
+    `
+    container.appendChild(div)
+  })
+})
+</script>
+ 
 
 <script>
 function filterBooks(cat,btn){
