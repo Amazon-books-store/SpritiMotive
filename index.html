@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Student Books Hub | Inter • EAMCET</title>
+<title>Motivation & Study Books for Students</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -10,13 +10,33 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,sans-serif;background:#f4f6f8}
-header{background:#1f2937;color:#fff;padding:16px;text-align:center;position:sticky;top:0}
-.controls{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.controls button,input{padding:7px 12px;border-radius:20px;border:none;font-size:13px}
-.controls button{background:#ff9900;font-weight:600;cursor:pointer}
+header{background:#1f2937;color:#fff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}
 
-.container{
-  max-width:1100px;margin:20px auto 80px;padding:0 12px;
+.tabs{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.tabs button{
+  padding:8px 16px;border:none;border-radius:20px;
+  background:#374151;color:#fff;font-weight:600;cursor:pointer
+}
+.tabs button.active{background:#ff9900;color:#111}
+
+.controls{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px
+}
+.controls button,input{
+  padding:6px 12px;border-radius:20px;border:none;font-size:13px
+}
+.controls button{background:#ff9900;font-weight:600;cursor:pointer}
+.controls button.active{background:#f59e0b}
+
+.section{
+  max-width:1100px;margin:24px auto 0;padding:0 14px
+}
+.section h3{
+  margin:10px 0;color:#1f2937;border-left:4px solid #ff9900;
+  padding-left:8px
+}
+
+.grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px
 }
 
@@ -25,15 +45,21 @@ header{background:#1f2937;color:#fff;padding:16px;text-align:center;position:sti
   box-shadow:0 4px 10px rgba(0,0,0,.1);
   display:flex;flex-direction:column;position:relative
 }
+.badge{
+  position:absolute;top:8px;left:8px;
+  background:#22c55e;color:#fff;
+  font-size:11px;padding:3px 8px;border-radius:12px
+}
 .book img{width:100%;height:180px;object-fit:contain}
-.badge{position:absolute;top:8px;left:8px;background:#22c55e;color:#fff;font-size:11px;padding:3px 7px;border-radius:10px}
-.price{font-weight:700;margin:5px 0}
+.book h4{font-size:14px;margin:6px 0}
+.book p{font-size:12px;color:#555;flex-grow:1}
 .stars{color:#f59e0b;font-size:13px}
 .btn{
   background:#ff9900;color:#111;text-decoration:none;
   text-align:center;padding:7px;border-radius:6px;
   font-weight:700;font-size:13px
 }
+
 footer{background:#1f2937;color:#fff;text-align:center;padding:14px;font-size:13px}
 </style>
 </head>
@@ -42,69 +68,121 @@ footer{background:#1f2937;color:#fff;text-align:center;padding:14px;font-size:13
 
 <header>
 <h2>📚 Student Books Hub</h2>
-<p>Inter • EAMCET • Motivation</p>
+<p>Motivation • Inter • EAMCET</p>
+
+<div class="tabs">
+  <button class="active" onclick="switchTab('Motivation',this)">🔥 Motivation</button>
+  <button onclick="switchTab('Study',this)">🎓 Study</button>
+</div>
+
 <div class="controls">
-<button onclick="showAll()">All</button>
-<button onclick="filterExam('Inter')">Inter</button>
-<button onclick="filterExam('EAMCET')">EAMCET</button>
-<input placeholder="Search..." onkeyup="searchBooks(this.value)">
+  <button class="active" onclick="filterCategory('All',this)">All</button>
+  <button onclick="filterCategory('Habit',this)">Habit</button>
+  <button onclick="filterCategory('Money',this)">Money</button>
+  <button onclick="filterCategory('Mindset',this)">Mindset</button>
+  <button onclick="filterCategory('Inter',this)">Inter</button>
+  <button onclick="filterCategory('EAMCET',this)">EAMCET</button>
+  <input placeholder="Search..." onkeyup="searchBooks(this.value)">
 </div>
 </header>
 
-<div class="container" id="books">
-<p>Loading books…</p>
-</div>
+<div id="content"></div>
 
 <footer>
-<p>Amazon Associate Disclosure</p>
+<p>As an Amazon Associate, I earn from qualifying purchases.</p>
 </footer>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-
 const SHEET_ID="1DYs0Y_1YqvOK2LM-MNiD_xVwPOX1C6Mel3xY7ALxXXc";
 const URL=`https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
-const container=document.getElementById("books");
-let books=[];
 
-fetch(URL)
-.then(r=>{
-  if(!r.ok) throw new Error("Sheet fetch failed");
-  return r.json();
-})
-.then(data=>{
-  books=data;
-  render(data);
-})
-.catch(err=>{
-  container.innerHTML="<p style='color:red'>Failed to load books. Check Google Sheet sharing.</p>";
-  console.error(err);
+let ALL=[], CURRENT_TAB="Motivation", CURRENT_CAT="All";
+
+fetch(URL).then(r=>r.json()).then(d=>{
+  ALL=d;
+  render();
 });
 
-function render(list){
- container.innerHTML="";
- list.forEach(b=>{
-  const d=document.createElement("div");
-  d.className="book";
-  d.dataset.exam=b.Exam;
-  d.innerHTML=`
-   ${b.Badge?`<span class="badge">${b.Badge}</span>`:""}
-   <img src="${b.Image}" onerror="this.src='https://via.placeholder.com/150'">
-   <h4>${b.Title}</h4>
-   <div class="stars">${"★".repeat(Math.round(b.Rating||4))}</div>
-   <div class="price">${b.Price||""}</div>
-   <p style="font-size:12px">${b.Description||""}</p>
-   <a class="btn" href="${b.Link}" target="_blank">Buy on Amazon</a>
-  `;
-  container.appendChild(d);
- });
+function render(){
+  const wrap=document.getElementById("content");
+  wrap.innerHTML="";
+
+  const data=ALL.filter(b=>
+    b.Type===CURRENT_TAB &&
+    (CURRENT_CAT==="All" || b.Category===CURRENT_CAT)
+  );
+
+  const groups={};
+  data.forEach(b=>{
+    groups[b.Category]=groups[b.Category]||[];
+    groups[b.Category].push(b);
+  });
+
+  for(const cat in groups){
+    const sec=document.createElement("div");
+    sec.className="section";
+    sec.innerHTML=`<h3>${cat} Books</h3><div class="grid"></div>`;
+    const grid=sec.querySelector(".grid");
+
+    groups[cat].forEach(b=>{
+      const card=document.createElement("div");
+      card.className="book";
+      card.innerHTML=`
+        ${b.Badge?`<span class="badge">${b.Badge}</span>`:""}
+        <img src="${b.Image}">
+        <h4>${b.Title}</h4>
+        <div class="stars">${"★".repeat(Math.round(b.Rating||4))}</div>
+        <p>${b.Description||""}</p>
+        <a class="btn" href="${amazonLink(b.Link)}">Buy on Amazon</a>
+      `;
+      grid.appendChild(card);
+    });
+    wrap.appendChild(sec);
+  }
 }
 
-window.filterExam=(ex)=>render(books.filter(b=>b.Exam===ex));
-window.showAll=()=>render(books);
-window.searchBooks=(q)=>render(books.filter(b=>b.Title.toLowerCase().includes(q.toLowerCase())));
+function switchTab(tab,btn){
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  CURRENT_TAB=tab;
+  CURRENT_CAT="All";
+  document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
+  document.querySelector(".controls button").classList.add("active");
+  render();
+}
 
-});
+function filterCategory(cat,btn){
+  document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  CURRENT_CAT=cat;
+  render();
+}
+
+function searchBooks(q){
+  q=q.toLowerCase();
+  const wrap=document.getElementById("content");
+  wrap.innerHTML="";
+  ALL.filter(b=>b.Title.toLowerCase().includes(q)).forEach(b=>{
+    const s=document.createElement("div");
+    s.className="section";
+    s.innerHTML=`<h3>${b.Category}</h3><div class="grid"></div>`;
+    const g=s.querySelector(".grid");
+    g.innerHTML=`
+      <div class="book">
+        <img src="${b.Image}">
+        <h4>${b.Title}</h4>
+        <a class="btn" href="${amazonLink(b.Link)}">Buy on Amazon</a>
+      </div>`;
+    wrap.appendChild(s);
+  });
+}
+
+function amazonLink(url){
+  if(/Android|iPhone/i.test(navigator.userAgent)){
+    return "intent://"+url.replace("https://","")+"#Intent;package=com.amazon.mShop.android.shopping;end";
+  }
+  return url;
+}
 </script>
 
 </body>
