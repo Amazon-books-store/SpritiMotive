@@ -2,11 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Student Books Hub | Inter • EAMCET • Motivation</title>
+<title>Student Books Hub | Inter • EAMCET</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="theme-color" content="#ff9900">
-<link rel="manifest" href="manifest.json">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -18,18 +15,25 @@ header{background:#1f2937;color:#fff;padding:16px;text-align:center;position:sti
 .controls button,input{padding:7px 12px;border-radius:20px;border:none;font-size:13px}
 .controls button{background:#ff9900;font-weight:600;cursor:pointer}
 
-.container{max-width:1100px;margin:20px auto 80px;padding:0 12px;
-display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.container{
+  max-width:1100px;margin:20px auto 80px;padding:0 12px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px
+}
 
-.book{background:#fff;border-radius:10px;padding:10px;box-shadow:0 4px 10px rgba(0,0,0,.1);position:relative;display:flex;flex-direction:column}
+.book{
+  background:#fff;border-radius:10px;padding:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+  display:flex;flex-direction:column;position:relative
+}
 .book img{width:100%;height:180px;object-fit:contain}
 .badge{position:absolute;top:8px;left:8px;background:#22c55e;color:#fff;font-size:11px;padding:3px 7px;border-radius:10px}
 .price{font-weight:700;margin:5px 0}
 .stars{color:#f59e0b;font-size:13px}
-.btn{background:#ff9900;color:#111;text-decoration:none;text-align:center;padding:7px;border-radius:6px;font-weight:700;font-size:13px}
-.wish{position:absolute;top:8px;right:8px;cursor:pointer;font-size:18px}
-
-.sticky-install{position:fixed;bottom:10px;right:10px;background:#111;color:#fff;padding:10px 14px;border-radius:30px;display:none}
+.btn{
+  background:#ff9900;color:#111;text-decoration:none;
+  text-align:center;padding:7px;border-radius:6px;
+  font-weight:700;font-size:13px
+}
 footer{background:#1f2937;color:#fff;text-align:center;padding:14px;font-size:13px}
 </style>
 </head>
@@ -40,91 +44,67 @@ footer{background:#1f2937;color:#fff;text-align:center;padding:14px;font-size:13
 <h2>📚 Student Books Hub</h2>
 <p>Inter • EAMCET • Motivation</p>
 <div class="controls">
-<button onclick="filterCat('all')">All</button>
+<button onclick="showAll()">All</button>
 <button onclick="filterExam('Inter')">Inter</button>
 <button onclick="filterExam('EAMCET')">EAMCET</button>
-<button onclick="filterCat('habit')">Habit</button>
-<button onclick="filterCat('money')">Money</button>
-<button onclick="filterCat('mindset')">Mindset</button>
 <input placeholder="Search..." onkeyup="searchBooks(this.value)">
-<button onclick="sortByRating()">⭐</button>
 </div>
 </header>
 
-<div class="container" id="books"></div>
-
-<div class="sticky-install" id="installBtn">➕ Install App</div>
+<div class="container" id="books">
+<p>Loading books…</p>
+</div>
 
 <footer>
 <p>Amazon Associate Disclosure</p>
-<p>❤️ Wishlist & Analytics saved on your device</p>
 </footer>
 
 <script>
+document.addEventListener("DOMContentLoaded",()=>{
+
 const SHEET_ID="1DYs0Y_1YqvOK2LM-MNiD_xVwPOX1C6Mel3xY7ALxXXc";
 const URL=`https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
-let booksData=[];
 const container=document.getElementById("books");
+let books=[];
 
-fetch(URL).then(r=>r.json()).then(data=>{
- booksData=data;
- renderBooks(data);
+fetch(URL)
+.then(r=>{
+  if(!r.ok) throw new Error("Sheet fetch failed");
+  return r.json();
+})
+.then(data=>{
+  books=data;
+  render(data);
+})
+.catch(err=>{
+  container.innerHTML="<p style='color:red'>Failed to load books. Check Google Sheet sharing.</p>";
+  console.error(err);
 });
 
-function renderBooks(data){
+function render(list){
  container.innerHTML="";
- data.forEach(b=>{
+ list.forEach(b=>{
   const d=document.createElement("div");
-  d.className=`book ${b.Category.toLowerCase()}`;
+  d.className="book";
   d.dataset.exam=b.Exam;
-  d.dataset.rating=b.Rating;
   d.innerHTML=`
    ${b.Badge?`<span class="badge">${b.Badge}</span>`:""}
-   <span class="wish" onclick="wishlist('${b.Title}')">❤️</span>
-   <img src="${b.Image}">
+   <img src="${b.Image}" onerror="this.src='https://via.placeholder.com/150'">
    <h4>${b.Title}</h4>
-   <div class="stars">${"★".repeat(Math.round(b.Rating))}</div>
-   <div class="price">${b.Price}</div>
-   <p style="font-size:12px">${b.Description}</p>
-   <a class="btn" href="${b.Link}" target="_blank" onclick="track()">Buy on Amazon</a>
+   <div class="stars">${"★".repeat(Math.round(b.Rating||4))}</div>
+   <div class="price">${b.Price||""}</div>
+   <p style="font-size:12px">${b.Description||""}</p>
+   <a class="btn" href="${b.Link}" target="_blank">Buy on Amazon</a>
   `;
   container.appendChild(d);
  });
 }
 
-function filterCat(cat){
- renderBooks(cat==="all"?booksData:booksData.filter(b=>b.Category.toLowerCase()===cat));
-}
-function filterExam(ex){
- renderBooks(booksData.filter(b=>b.Exam===ex));
-}
-function searchBooks(q){
- renderBooks(booksData.filter(b=>b.Title.toLowerCase().includes(q.toLowerCase())));
-}
-function sortByRating(){
- renderBooks([...booksData].sort((a,b)=>b.Rating-a.Rating));
-}
+window.filterExam=(ex)=>render(books.filter(b=>b.Exam===ex));
+window.showAll=()=>render(books);
+window.searchBooks=(q)=>render(books.filter(b=>b.Title.toLowerCase().includes(q.toLowerCase())));
 
-function wishlist(title){
- let w=JSON.parse(localStorage.getItem("wish")||"[]");
- if(!w.includes(title)){w.push(title);alert("Added to wishlist ❤️")}
- localStorage.setItem("wish",JSON.stringify(w));
-}
-
-function track(){
- localStorage.setItem("clicks",(Number(localStorage.getItem("clicks"))||0)+1);
-}
-
-/* PWA Install */
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt",e=>{
- e.preventDefault();
- deferredPrompt=e;
- document.getElementById("installBtn").style.display="block";
 });
-document.getElementById("installBtn").onclick=()=>{
- deferredPrompt.prompt();
-};
 </script>
 
 </body>
