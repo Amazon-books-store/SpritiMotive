@@ -2,35 +2,54 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Books for Students | Motivation & Study</title>
+<title>Best Book | Motivation & Study</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,sans-serif;background:#f4f6f8;color:#111}
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:#f4f6f8;
+  color:#111
+}
 
+/* HEADER */
 header{
-  background:#1f2937;color:#fff;
-  padding:16px;text-align:center;
-  position:sticky;top:0;z-index:10
+  background:#1f2937;
+  color:#fff;
+  padding:16px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:10
 }
 header h1{margin:0;font-size:22px}
 header p{margin:6px 0;font-size:14px;opacity:.9}
 
+/* CONTROLS */
 .controls{
-  display:flex;gap:8px;flex-wrap:wrap;
-  justify-content:center;margin-top:10px
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:10px
 }
 .controls button{
-  padding:7px 14px;border:none;
+  padding:7px 14px;
+  border:none;
   border-radius:20px;
   background:#ff9900;
-  font-weight:600;cursor:pointer
+  font-weight:600;
+  cursor:pointer
 }
-.controls button.active{background:#f59e0b}
+.controls button.active{
+  background:#f59e0b
+}
 
+/* GRID */
 .container{
   max-width:1100px;
   margin:20px auto 40px;
@@ -40,39 +59,65 @@ header p{margin:6px 0;font-size:14px;opacity:.9}
   gap:14px
 }
 
+/* BOOK CARD */
 .book{
-  background:#fff;border-radius:10px;
+  background:#fff;
+  border-radius:10px;
   padding:10px;
   box-shadow:0 4px 10px rgba(0,0,0,.1);
-  display:flex;flex-direction:column;
+  display:flex;
+  flex-direction:column;
   position:relative
 }
 
 .badge{
-  position:absolute;top:8px;left:8px;
-  background:#22c55e;color:#fff;
-  font-size:11px;padding:3px 8px;
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:#22c55e;
+  color:#fff;
+  font-size:11px;
+  padding:3px 8px;
   border-radius:12px
 }
 
 .book img{
-  width:100%;height:180px;
+  width:100%;
+  height:180px;
   object-fit:contain
 }
-.book h3{font-size:14px;margin:6px 0}
-.book p{font-size:12px;color:#555;flex-grow:1}
-.stars{color:#f59e0b;font-size:13px}
-
-.btn{
-  background:#ff9900;color:#111;
-  text-decoration:none;text-align:center;
-  padding:7px;border-radius:6px;
-  font-weight:700;font-size:13px
+.book h3{
+  font-size:14px;
+  margin:6px 0
+}
+.book p{
+  font-size:12px;
+  color:#555;
+  flex-grow:1
+}
+.stars{
+  color:#f59e0b;
+  font-size:13px;
+  margin-bottom:4px
 }
 
+.btn{
+  background:#ff9900;
+  color:#111;
+  text-decoration:none;
+  text-align:center;
+  padding:7px;
+  border-radius:6px;
+  font-weight:700;
+  font-size:13px
+}
+
+/* FOOTER */
 footer{
-  background:#1f2937;color:#fff;
-  text-align:center;padding:14px;
+  background:#1f2937;
+  color:#fff;
+  text-align:center;
+  padding:14px;
   font-size:13px
 }
 </style>
@@ -82,7 +127,7 @@ footer{
 
 <header>
 <h1>📚 Books for Students</h1>
-<p>Motivation • Inter • EAMCET • Study</p>
+<p>Motivation • Study • Inter • EAMCET</p>
 
 <div class="controls" id="categoryButtons">
   <button class="active" onclick="filterCategory('All',this)">All</button>
@@ -96,63 +141,97 @@ footer{
 </footer>
 
 <script>
+/* ==============================
+   GOOGLE SHEET CONFIG
+================================ */
 const SHEET_ID = "1DYs0Y_1YqvOK2LM-MNiD_xVwPOX1C6Mel3xY7ALxXXc";
 const URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
 
 let ALL_BOOKS = [];
 
+/* ==============================
+   FETCH BOOKS
+================================ */
 fetch(URL)
 .then(res => res.json())
 .then(data => {
   ALL_BOOKS = data;
   createCategoryButtons();
   renderBooks("All");
+})
+.catch(err => {
+  document.getElementById("books").innerHTML =
+    "<p style='grid-column:1/-1;text-align:center'>Failed to load books</p>";
 });
 
+/* ==============================
+   CREATE CATEGORY BUTTONS
+================================ */
 function createCategoryButtons(){
-  const cats = [...new Set(ALL_BOOKS.map(b => b.Category))];
   const wrap = document.getElementById("categoryButtons");
 
-  cats.forEach(c => {
+  const categories = [...new Set(
+    ALL_BOOKS
+      .map(b => b.Category)
+      .filter(c => c && c.trim() !== "")
+  )];
+
+  categories.forEach(cat => {
     const btn = document.createElement("button");
-    btn.innerText = c;
-    btn.onclick = function(){ filterCategory(c,btn); };
+    btn.textContent = cat;
+    btn.onclick = function(){
+      filterCategory(cat, btn);
+    };
     wrap.appendChild(btn);
   });
 }
 
+/* ==============================
+   RENDER BOOKS
+================================ */
 function renderBooks(category){
   const box = document.getElementById("books");
   box.innerHTML = "";
 
   ALL_BOOKS
-  .filter(b => category==="All" || b.Category===category)
+  .filter(b => category === "All" || b.Category === category)
   .forEach(b => {
     const div = document.createElement("div");
     div.className = "book";
+
     div.innerHTML = `
       ${b.Badge ? `<span class="badge">${b.Badge}</span>` : ""}
-      <img src="${b.Image}">
+      <img src="${b.Image}" alt="${b.Title}">
       <h3>${b.Title}</h3>
       <div class="stars">${"★".repeat(Math.round(b.Rating || 4))}</div>
       <p>${b.Description || ""}</p>
-      <a class="btn" href="${amazonLink(b.Link)}">Buy on Amazon</a>
+      <a class="btn" href="${amazonLink(b.Link)}" target="_blank" rel="noopener">
+        Buy on Amazon
+      </a>
     `;
+
     box.appendChild(div);
   });
 }
 
-function filterCategory(cat,btn){
+/* ==============================
+   FILTER CATEGORY
+================================ */
+function filterCategory(cat, btn){
   document.querySelectorAll(".controls button")
-    .forEach(b=>b.classList.remove("active"));
+    .forEach(b => b.classList.remove("active"));
+
   btn.classList.add("active");
   renderBooks(cat);
 }
 
+/* ==============================
+   AMAZON APP DEEP LINK (SAFE)
+================================ */
 function amazonLink(url){
-  if(/Android|iPhone/i.test(navigator.userAgent)){
-    return "intent://" + url.replace("https://","") +
-      "#Intent;package=com.amazon.mShop.android.shopping;end";
+  if (/Android/i.test(navigator.userAgent)) {
+    return "https://www.amazon.in/gp/aw/d?redirect=true&url=" +
+           encodeURIComponent(url);
   }
   return url;
 }
