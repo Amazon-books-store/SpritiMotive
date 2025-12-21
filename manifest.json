@@ -1,12 +1,23 @@
 {
-  "background_color": "#ffffff",
-  "description": "Best motivational and study books for students including Inter &amp; EAMCET preparation.",
-  "dir": "ltr",
+  "name": "SpritiMotive - Motivational & Study Books",
+  "short_name": "SpritiMotive",
+  "description": "Best motivational and study books for students, Inter & EAMCET preparation.",
+  "start_url": "/SpritiMotive/",
+  "scope": "/SpritiMotive/",
   "display": "standalone",
-  "name": "amazon-books-store.github",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "amazon-books-store.github",
-  "start_url": "https://amazon-books-store.github.io/SpritiMotive/",
-  "theme_color": "#ffffff"
+  "background_color": "#1f2937",
+  "theme_color": "#ff9900",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
